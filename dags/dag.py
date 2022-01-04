@@ -216,19 +216,6 @@ s3_runners = PythonOperator(
     wait_for_downstream=True,
 )
 
-# def task_1(sqll):
-#     phook = PostgresHook(postgre_conn_id='postgres_default',
-#                         host='host.docker.internal',
-#                         database='airflow',
-#                         user='airflow',
-#                         password='airflow',
-#                         port=5432)
-#     records = phook.get_records(sqll)
-#     return records
-
-
-
-
 
 start_s3_to_redshift = DummyOperator(
     dag=dag,
