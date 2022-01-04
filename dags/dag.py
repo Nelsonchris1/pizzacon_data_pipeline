@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from airflow.models import Variable
 from airflow.hooks.S3_hook import S3Hook
 from airflow.hooks.postgres_hook import PostgresHook
-import create_table
 import sql
 import os
 
@@ -22,7 +21,8 @@ default_Args = {
     "email": ["ogbeide331@gmail.com"],
     "email_on_failure": False,
     "email_on_retry": False,
-    "retries":0,
+    "retries":1,
+    'retry_delay': timedelta(minutes=3)
 }
 
 
