@@ -109,7 +109,7 @@ extract_to_csv = PythonOperator(
 
 def upload_to_s3(
     bucket_name, key, exact_dir, remove_local:bool = False):
-    s3 = S3Hook("s3_conn")
+    s3 = S3Hook("aws_credentials")
     filename = []
     directory = os.path.join("dags","temp", exact_dir)
     for root,dirs,files in os.walk(directory):
