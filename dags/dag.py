@@ -173,7 +173,7 @@ s3_pizza_recipes = PythonOperator(
 
 s3_pizza_toppings = PythonOperator(
     dag=dag,
-    task_id="s3_upload",
+    task_id="s3_pizza_toppings",
     python_callable=upload_to_s3,
     op_kwargs={
         "key": "stage_data/pizza_toppings.csv",
@@ -216,137 +216,105 @@ s3_runners = PythonOperator(
     wait_for_downstream=True,
 )
 
-def task_1(sqll):
-    phook = PostgresHook(postgre_conn_id='postgres_default',
-                        host='host.docker.internal',
-                        database='airflow',
-                        user='airflow',
-                        password='airflow',
-                        port=5432)
-    records = phook.get_records(sqll)
-    return records
+# def task_1(sqll):
+#     phook = PostgresHook(postgre_conn_id='postgres_default',
+#                         host='host.docker.internal',
+#                         database='airflow',
+#                         user='airflow',
+#                         password='airflow',
+#                         port=5432)
+#     records = phook.get_records(sqll)
+#     return records
 
-pizza_w_change = PythonOperator(
-    dag=dag,
-    task_id='pizza_w_change',
-    python_callable=task_1,
-    op_kwargs= {"sqll": sql.task_7},
-    depends_on_past=True,
-    wait_for_downstream=True,
-)
 
-pizza_order_per_hour = PythonOperator(
+
+
+
+start_s3_to_redshift = DummyOperator(
     dag=dag,
-    task_id='pizza_order_per_hour',
-    python_callable=task_1,
-    op_kwargs= {"sqll": sql.task_9},
+    task_id="start_s3_to_redshift",
     depends_on_past=True,
     wait_for_downstream=True
 )
 
-runner_avg_to_pickup = PythonOperator(
-    dag=dag,
-    task_id='pizza_order_per_hour',
-    python_callable=task_1,
-    op_kwargs= {"sqll": sql.Ex_2},
-    depends_on_past=True,
-    wait_for_downstream=True
+redshift_runner = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_runner',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='runners',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
 )
 
-avg_distance_to_dropoff = PythonOperator(
-    dag=dag,
-    task_id='pizza_order_per_hour',
-    python_callable=task_1,
-    op_kwargs= {"sqll": sql.EX_4},
-    depends_on_past=True,
-    wait_for_downstream=True
+redshift_pizza_names = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_pizza_names',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='pizza_names',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
 )
 
-run_query = DummyOperator(
-    dag=dag,
-    task_id="Run_queries",
-    depends_on_past=True,
-    wait_for_downstream=True
+redshift_runner_orders = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_runner_orders',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='runner_orders',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
 )
 
-# redshift_runner = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_runner',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='runners',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
+redshift_customer_orders = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_customer_orders',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='customer_order',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
+)
 
-# redshift_pizza_names = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_pizza_names',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='pizza_names',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
+redshift_pizza_recipe = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_pizza_recipe',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='pizza_recipes',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
+)
 
-# redshift_runner_orders = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_runner_orders',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='runner_orders',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
-
-# redshift_customer_orders = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_customer_orders',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='customer_order',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
-
-# redshift_pizza_recipe = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_pizza_recipe',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='pizza_recipes',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
-
-# redshift_pizza_toppings = S3ToRedshiftTransfer(
-#         dag=dag,
-#         task_id = 'redshift_pizza_toppings',
-#         aws_conn_id='aws_credentials',
-#         redshift_conn_id='redshift',
-#         schema='public',
-#         table='pizza_toppings',
-#         s3_bucket='pizzacon',
-#         s3_key='stage_data',
-#         copy_options=['csv','ignoreheader 1'],
-# )
+redshift_pizza_toppings = S3ToRedshiftTransfer(
+        dag=dag,
+        task_id = 'redshift_pizza_toppings',
+        aws_conn_id='aws_credentials',
+        redshift_conn_id='redshift',
+        schema='public',
+        table='pizza_toppings',
+        s3_bucket='pizzacon',
+        s3_key='stage_data',
+        copy_options=['csv','ignoreheader 1'],
+)
 
 
 
 
 
 start_operation >> [clean_runner_order , clean_customer_order] >>  runner_dtype >> extract_to_csv >> [s3_cutomer_order, s3_pizza_names,
-s3_pizza_recipes, s3_pizza_toppings, s3_runner_orders, s3_runners] >> run_query >> [pizza_w_change, pizza_order_per_hour, runner_avg_to_pickup, avg_distance_to_dropoff]
+s3_pizza_recipes, s3_pizza_toppings, s3_runner_orders, s3_runners] >> start_s3_to_redshift >> [redshift_customer_orders, redshift_pizza_names, redshift_pizza_recipe, redshift_pizza_toppings, redshift_runner_orders, redshift_runner]
 
 
 
