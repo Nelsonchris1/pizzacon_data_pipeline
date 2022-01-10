@@ -21,6 +21,7 @@ Pizzacon is a New pizza house that delivers to customers only. The IT department
 5. Docker
 
 ## Airchitecture
+![Test Image 3](/img/architecture diagram.PNG)
 
 
 ## Result
