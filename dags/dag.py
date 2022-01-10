@@ -303,7 +303,3 @@ redshift_pizza_toppings = S3ToRedshiftTransfer(
 start_operation >> [clean_runner_order , clean_customer_order] >>  runner_dtype >> extract_to_csv >> [s3_cutomer_order, s3_pizza_names,
 s3_pizza_recipes, s3_pizza_toppings, s3_runner_orders, s3_runners] >> start_s3_to_redshift >> [redshift_customer_orders, redshift_pizza_names, redshift_pizza_recipe, redshift_pizza_toppings, redshift_runner_orders, redshift_runner]
 
-
-
-
-# start_operation >> s3_to_redshift
