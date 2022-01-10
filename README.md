@@ -31,4 +31,4 @@ The image below display several task that ran successfully
 <img src="img/airflow success.PNG">
 
 # Redshift
-<img src="img/sql_task_1.PNG>
+<img src="img/sql_task_1.PNG">
