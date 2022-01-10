@@ -25,4 +25,10 @@ Pizzacon is a New pizza house that delivers to customers only. The IT department
 
 
 ## Result
-The image below display an several task that ran successfully
+The image below display several task that ran successfully
+
+# Airflow dag
+<img src="img/airflow success.PNG">
+
+# Redshift
+<img src="img/sql_task_1.PNG>
