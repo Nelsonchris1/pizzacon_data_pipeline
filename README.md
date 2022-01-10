@@ -3,9 +3,8 @@ Pizzacon is a New pizza house that delivers to customers only. The IT department
 
 ### Problem
 
-1. Local DB store will not run query analysis faster with the growing demand for pizza delivered daily
+How can you make analytical work for pizzacon frictionless from a data standpoint and enable data analysts and data scientists to produce great work by exposing as much of the data available to them in a clean and structured form and optimize productivity by reducing run-times.
 2. Having all data regarding pizzacon in local db store is risky
-3. Data analyst would need a faster service to help query data
 
 ### Solution
 1. Since query time is important, we leverage cloud data warehousing for faster querying
