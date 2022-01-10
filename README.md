@@ -1,8 +1,9 @@
 # pizzacon_data_pipeline
 Pizzacon is a New pizza house that delivers to customers only. The IT department is still growing with data analyst. But there were problems that needed solutions to help make better analysis 
 
-NOTE!!! This repo solves the Week 2 challenge of Danny Ma SQL 8th week challenege . solution to all use case question can be found in **'sql.py'** in the **'dags'** folder
-[Danny Ma 8 Weeks challenege](https://8weeksqlchallenge.com/case-study-2/)
+NOTE!!! This repo solved the Week 2 challenge of Danny Ma SQL 8th week challenege .Solution to all use case question can be found in **'sql.py'** in the **'dags'** folder
+
+Big credits to Danny Ma for this [Danny Ma 8 Weeks challenege](https://8weeksqlchallenge.com/case-study-2/)
 
 ### Problem
 
